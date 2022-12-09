@@ -13,13 +13,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.historyofselayar.R
 import com.example.historyofselayar.component.TextSelayar
+import com.example.historyofselayar.main.Screen
 import com.example.historyofselayar.main.component.HistoryItem
 import com.example.historyofselayar.ui.theme.Typography
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    navController: NavController
+) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -74,17 +79,23 @@ fun HomeScreen() {
                     .padding(horizontal = 24.dp)
             )
             LazyRow(
-                modifier = Modifier.constrainAs(lazyRow) {
-                    top.linkTo(tvSubtitle.bottom, 24.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                }.wrapContentSize(),
+                modifier = Modifier
+                    .constrainAs(lazyRow) {
+                        top.linkTo(tvSubtitle.bottom, 24.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                    }
+                    .wrapContentSize(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
                 items(count = 5) {
-                    HistoryItem("https://images.pexels.com/photos/15286/pexels-photo.jpg?cs=srgb&dl=pexels-luis-del-r%C3%ADo-15286.jpg&fm=jpg")
+                    HistoryItem(
+                        "https://images.pexels.com/photos/15286/pexels-photo.jpg?cs=srgb&dl=pexels-luis-del-r%C3%ADo-15286.jpg&fm=jpg",
+                        onItemClickListener = {
+                            navController.navigate(Screen.DETAILSCREEN.name)
+                        })
                 }
             }
         }
@@ -95,6 +106,6 @@ fun HomeScreen() {
 @Composable
 fun PreviewHomeScreen() {
     MaterialTheme {
-        HomeScreen()
+        HomeScreen(rememberNavController())
     }
 }

@@ -2,6 +2,7 @@ package com.example.historyofselayar.main.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -28,12 +29,15 @@ import com.example.historyofselayar.component.TextSelayar
 import com.example.historyofselayar.ui.theme.Typography
 
 @Composable
-fun HistoryItem(urlImage: String) {
+fun HistoryItem(urlImage: String, onItemClickListener : () -> Unit) {
     ConstraintLayout(
         Modifier
             .wrapContentSize()
             .background(Color.White)
             .padding(horizontal = 12.dp)
+            .clickable {
+                onItemClickListener()
+            }
     ) {
         val (cardImage, tvTitle, tvSubtitle) = createRefs()
         AsyncImage(model = urlImage,
@@ -77,5 +81,5 @@ fun HistoryItem(urlImage: String) {
 @Preview
 @Composable
 fun PreviewHistoryItem() {
-    HistoryItem("https://image-sample.com")
+    HistoryItem("https://image-sample.com", {})
 }

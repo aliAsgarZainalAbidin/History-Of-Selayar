@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -19,8 +20,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             HistoryOfSelayarTheme {
                 // A surface container using the 'background' color from the theme
-                MaterialTheme {
-                    HomeScreen()
+                Scaffold {_ ->
+                    MainNav()
                 }
             }
         }
