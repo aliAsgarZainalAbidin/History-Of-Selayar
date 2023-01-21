@@ -6,9 +6,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.historyofselayar.screen.DetailScreen
 import com.example.historyofselayar.screen.HomeScreen
+import com.example.historyofselayar.screen.ScannerScreen
 
 enum class Screen {
-    HOMESCREEN, DETAILSCREEN
+    HOMESCREEN, DETAILSCREEN, SCANNERSCREEN
 }
 
 @Composable
@@ -21,6 +22,11 @@ fun MainNav() {
         composable(Screen.DETAILSCREEN.name) {
             DetailScreen(
                 urlImage = "https://images.pexels.com/photos/15286/pexels-photo.jpg?cs=srgb&dl=pexels-luis-del-r%C3%ADo-15286.jpg&fm=jpg",
+                navController
+            )
+        }
+        composable(Screen.SCANNERSCREEN.name){
+            ScannerScreen(
                 navController
             )
         }

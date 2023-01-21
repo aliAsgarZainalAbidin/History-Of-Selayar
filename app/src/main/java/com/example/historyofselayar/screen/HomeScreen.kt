@@ -28,7 +28,9 @@ fun HomeScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    navController.navigate(Screen.SCANNERSCREEN.name)
+                },
                 backgroundColor = Color(red = 254, green = 216, blue = 25)
             ) {
                 Icon(
