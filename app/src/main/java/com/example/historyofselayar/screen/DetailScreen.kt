@@ -27,17 +27,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.historyofselayar.R
 import com.example.historyofselayar.component.TextSelayar
 import com.example.historyofselayar.ui.theme.Typography
+import com.example.historyofselayar.viewmodel.HistoryViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DetailScreen(urlImage: String, navController: NavController) {
+fun DetailScreen(urlImage: String, navController: NavController,historyViewModel: HistoryViewModel) {
     ConstraintLayout(Modifier.fillMaxSize()) {
         val (ivItem, modal) = createRefs()
         val modalState = rememberModalBottomSheetState(
@@ -167,5 +169,5 @@ fun DetailScreen(urlImage: String, navController: NavController) {
 @Preview
 @Composable
 fun PreviewDetailScreen() {
-    DetailScreen(urlImage = "", rememberNavController())
+    DetailScreen(urlImage = "", rememberNavController(), hiltViewModel())
 }

@@ -29,7 +29,7 @@ import com.example.historyofselayar.component.TextSelayar
 import com.example.historyofselayar.ui.theme.Typography
 
 @Composable
-fun HistoryItem(urlImage: String, onItemClickListener : () -> Unit) {
+fun HistoryItem(urlImage: String,scale : Int = 1, onItemClickListener : () -> Unit) {
     ConstraintLayout(
         Modifier
             .wrapContentSize()
@@ -40,6 +40,8 @@ fun HistoryItem(urlImage: String, onItemClickListener : () -> Unit) {
             }
     ) {
         val (cardImage, tvTitle, tvSubtitle) = createRefs()
+        val widthItem = 220.dp * scale
+        val heightItem = 380.dp * scale
         AsyncImage(model = urlImage,
             contentDescription = "Image Destination",
             placeholder = painterResource(id = R.drawable.sample_image),
@@ -49,8 +51,8 @@ fun HistoryItem(urlImage: String, onItemClickListener : () -> Unit) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
-                .height(380.dp)
-                .width(220.dp)
+                .height(heightItem)
+                .width(widthItem)
                 .clip(RoundedCornerShape(12.dp)),
             contentScale = ContentScale.Crop)
         TextSelayar(
@@ -81,5 +83,5 @@ fun HistoryItem(urlImage: String, onItemClickListener : () -> Unit) {
 @Preview
 @Composable
 fun PreviewHistoryItem() {
-    HistoryItem("https://image-sample.com", {})
+    HistoryItem("https://image-sample.com",1, {})
 }

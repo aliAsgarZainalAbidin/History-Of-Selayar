@@ -40,9 +40,10 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import java.util.concurrent.Executors
 import com.example.historyofselayar.R
+import com.example.historyofselayar.viewmodel.HistoryViewModel
 
 @Composable
-fun ScannerScreen(navController: NavController) {
+fun ScannerScreen(navController: NavController,historyViewModel: HistoryViewModel) {
     RequiredPermission(
         listPermission = arrayListOf(
             Manifest.permission.CAMERA,

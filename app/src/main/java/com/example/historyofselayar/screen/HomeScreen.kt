@@ -2,6 +2,7 @@ package com.example.historyofselayar.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.historyofselayar.R
@@ -20,10 +22,12 @@ import com.example.historyofselayar.component.TextSelayar
 import com.example.historyofselayar.main.Screen
 import com.example.historyofselayar.main.component.HistoryItem
 import com.example.historyofselayar.ui.theme.Typography
+import com.example.historyofselayar.viewmodel.HistoryViewModel
 
 @Composable
 fun HomeScreen(
-    navController: NavController
+    navController: NavController,
+    historyViewModel: HistoryViewModel
 ) {
     Scaffold(
         floatingActionButton = {
@@ -92,9 +96,11 @@ fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                items(count = 5) {
+                val data = "https://images.pexels.com/photos/15286/pexels-photo.jpg?cs=srgb&dl=pexels-luis-del-r%C3%ADo-15286.jpg&fm=jpg"
+                val listData = arrayListOf(data,data,data,data,data,data,data)
+                itemsIndexed(listData){ index, value ->
                     HistoryItem(
-                        "https://images.pexels.com/photos/15286/pexels-photo.jpg?cs=srgb&dl=pexels-luis-del-r%C3%ADo-15286.jpg&fm=jpg",
+                        value,
                         onItemClickListener = {
                             navController.navigate(Screen.DETAILSCREEN.name)
                         })
@@ -108,6 +114,6 @@ fun HomeScreen(
 @Composable
 fun PreviewHomeScreen() {
     MaterialTheme {
-        HomeScreen(rememberNavController())
+        HomeScreen(rememberNavController(), hiltViewModel())
     }
 }
