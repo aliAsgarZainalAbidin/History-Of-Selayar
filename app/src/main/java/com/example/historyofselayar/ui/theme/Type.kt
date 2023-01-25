@@ -49,13 +49,13 @@ val Typography = Typography(
     ),
     body1 = TextStyle(
         fontWeight = FontWeight.W400,
-        fontSize = 12.sp,
+        fontSize = 14.sp,
         fontFamily = FontFamily.Monospace,
         letterSpacing = 0.15.sp,
     ),
     body2 = TextStyle(
         fontWeight = FontWeight.W400,
-        fontSize = 14.sp,
+        fontSize = 18.sp,
         fontFamily = FontFamily.Monospace),
     button = TextStyle(
         fontWeight = FontWeight.W500,

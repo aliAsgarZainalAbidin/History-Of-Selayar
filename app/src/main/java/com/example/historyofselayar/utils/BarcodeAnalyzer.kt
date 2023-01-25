@@ -1,6 +1,7 @@
 package com.example.historyofselayar.utils
 
 import android.content.Context
+import android.util.Log
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -17,6 +18,7 @@ class BarcodeAnalyzer(
 
     @ExperimentalGetImage
     override fun analyze(image: ImageProxy) {
+        Log.d("TAG", "analyze: Running")
         image.image?.let { imageToAnalyz ->
             val options = BarcodeScannerOptions.Builder()
                 .setBarcodeFormats(FORMAT_ALL_FORMATS)
@@ -25,11 +27,17 @@ class BarcodeAnalyzer(
             val imageProcess = InputImage.fromMediaImage(imageToAnalyz,image.imageInfo.rotationDegrees)
             barcodeScanner.process(imageProcess)
                 .addOnSuccessListener {
-                    if (it != null) {
+                    if (it.isNotEmpty()){
                         onDetectedCode(it)
+                    } else {
+                        Log.e("Barocde Analyzer", "analyze: No barcode scanned")
                     }
                 }
+                .addOnFailureListener { e ->
+                    Log.e("Barocde Analyzer", "Barocde Analyzer: Something went wrong $e")
+                }
                 .addOnCompleteListener {
+                    Log.d("TAG", "analyze: Complete")
                     imageToAnalyz.close()
                 }
         }

@@ -12,7 +12,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import com.example.historyofselayar.screen.HomeScreen
+import com.example.historyofselayar.screen.ScannerScreen
+import com.example.historyofselayar.screen.SearchScreen
 import com.example.historyofselayar.ui.theme.HistoryOfSelayarTheme
 import com.example.historyofselayar.viewmodel.HistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint

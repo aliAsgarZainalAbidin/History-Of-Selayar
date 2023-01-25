@@ -1,24 +1,25 @@
 package com.example.historyofselayar.screen
 
+import android.content.Context
+import android.location.Geocoder
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -31,26 +32,35 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.historyofselayar.BuildConfig
 import com.example.historyofselayar.R
 import com.example.historyofselayar.component.TextSelayar
 import com.example.historyofselayar.ui.theme.Typography
 import com.example.historyofselayar.viewmodel.HistoryViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DetailScreen(urlImage: String, navController: NavController,historyViewModel: HistoryViewModel) {
+fun DetailScreen(id: Int, navController: NavController, historyViewModel: HistoryViewModel) {
     ConstraintLayout(Modifier.fillMaxSize()) {
         val (ivItem, modal) = createRefs()
+        val context = LocalContext.current
         val modalState = rememberModalBottomSheetState(
-            initialValue = ModalBottomSheetValue.HalfExpanded,
+            initialValue = ModalBottomSheetValue.Expanded,
             skipHalfExpanded = false,
-            confirmStateChange = { true }
         )
         val scope = rememberCoroutineScope()
+        val detailWisata by remember { historyViewModel.getDetailWisata(id) }
+        val baseImageUrl = BuildConfig.BASE_IMAGE_URL
+
+        val lat = detailWisata.wisata?.maps?.let { getLocation(it).getOrNull(0) }
+        val long = detailWisata.wisata?.maps?.let { getLocation(it).getOrNull(1) }
+        Log.d("TAG", "DetailScreen: $lat $long")
+
 
         AsyncImage(
-            model = urlImage,
+            model = "https://api.deval.fun/images/wisata%201-Attach-2-1674365285.jpg",
             contentDescription = "Image Destination",
             placeholder = painterResource(id = R.drawable.sample_image),
             contentScale = ContentScale.Crop,
@@ -85,17 +95,16 @@ fun DetailScreen(urlImage: String, navController: NavController,historyViewModel
             sheetContent = {
                 ConstraintLayout(
                     modifier = Modifier
-                        .padding(12.dp)
+                        .padding(horizontal = 16.dp, vertical = 20.dp)
                         .verticalScroll(rememberScrollState())
-                        .defaultMinSize(32.dp)
                         .fillMaxWidth()
                         .fillMaxHeight(0.95f)
                         .background(Color.White)
                 ) {
-                    val (tvName, tvImage, tvLocation, tvDeskripsi, lazyRow) = createRefs()
+                    val (tvName, tvImage, tvLocation,titleDeskripsi, tvDeskripsi, lazyRow) = createRefs()
                     TextSelayar(
-                        text = "Hutan Belantara",
-                        style = Typography.body2.copy(fontWeight = FontWeight.Bold),
+                        text = detailWisata.wisata?.nama_wisata ?: "",
+                        style = Typography.body1.copy(fontWeight = FontWeight.Bold),
                         modifier = Modifier.constrainAs(tvName) {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
@@ -105,9 +114,8 @@ fun DetailScreen(urlImage: String, navController: NavController,historyViewModel
                         overflow = TextOverflow.Ellipsis
                     )
                     TextSelayar(
-                        text = "Majene, Kalimantan Barat",
+                        text = getAddress(context, lat?.toDouble(), long?.toDouble()),
                         style = Typography.body1.copy(
-                            fontSize = 10.sp,
                             color = Color.Black.copy(alpha = 0.7f)
                         ),
                         modifier = Modifier.constrainAs(tvLocation) {
@@ -116,13 +124,24 @@ fun DetailScreen(urlImage: String, navController: NavController,historyViewModel
                             end.linkTo(tvName.end)
                             width = Dimension.fillToConstraints
                         },
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        maxlines = 3
                     )
                     TextSelayar(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Imperdiet et at neque interdum. Malesuada et at magna quam aenean mus tristique ut. Varius erat duis amet in diam sed viverra sed malesuada. Aliquam cras non viverra dolor nulla nibh in. Orci nulla scelerisque erat eget cursus at. Congue quis dolor mattis mauris arcu. Senectus fusce morbi lorem in. Adipiscing vitae fermentum erat nulla massa felis feugiat vitae, netus. Integer natoque volutpat tincidunt quam mauris, a purus molestie. Amet consequat, sed venenatis leo lacus, varius ac lectus et. Porta pellentesque velit diam tortor ultrices urna. At vel quis in non massa proin elementum eleifend vehicula. Amet arcu ut tristique quis sagittis enim et. Tortor, tempus ac rutrum amet hendrerit et mauris vulputate. ",
-                        style = Typography.body1.copy(fontSize = 10.sp),
+                        "Deskripsi",
+                        style = Typography.body1.copy(fontWeight = FontWeight.Bold),
+                        modifier = Modifier.constrainAs(titleDeskripsi) {
+                            top.linkTo(tvLocation.bottom, 16.dp)
+                            start.linkTo(tvName.start)
+                            end.linkTo(tvName.end)
+                            width = Dimension.fillToConstraints
+                        },
+                    )
+                    TextSelayar(
+                        detailWisata.wisata?.deskripsi ?: "",
+                        style = Typography.body1,
                         modifier = Modifier.constrainAs(tvDeskripsi) {
-                            top.linkTo(tvLocation.bottom, 8.dp)
+                            top.linkTo(titleDeskripsi.bottom, 8.dp)
                             start.linkTo(tvName.start)
                             end.linkTo(tvName.end)
                             width = Dimension.fillToConstraints
@@ -137,17 +156,18 @@ fun DetailScreen(urlImage: String, navController: NavController,historyViewModel
                             bottom.linkTo(parent.bottom, 8.dp)
                         }
                     ) {
-                        items(5) {
+                        itemsIndexed(detailWisata.attach ?: arrayListOf()) { index, value ->
                             AsyncImage(
-                                model = urlImage,
+                                model = "$baseImageUrl${value.attach_name}",
                                 contentDescription = "Image Destination",
                                 placeholder = painterResource(id = R.drawable.sample_image),
-                                contentScale = ContentScale.Fit,
+                                contentScale = ContentScale.Crop,
                                 modifier = Modifier
-                                    .height(400.dp)
-                                    .wrapContentWidth()
+                                    .width(200.dp)
+                                    .height(260.dp)
                                     .padding(12.dp)
-                                    .clip(RoundedCornerShape(8.dp))
+                                    .clip(RoundedCornerShape(8.dp)),
+                                alignment = Alignment.Center
                             )
                         }
                     }
@@ -166,8 +186,32 @@ fun DetailScreen(urlImage: String, navController: NavController,historyViewModel
     }
 }
 
+private fun getAddress(context: Context, lat: Double? , long: Double? ): String {
+    val geocoder = Geocoder(context, Locale.getDefault())
+    val address = geocoder.getFromLocation(lat ?: -5.182083, long ?: 119.453222, 1)?.getOrNull(0)
+    val addressLine = address?.getAddressLine(0)
+    val kota = address?.locality
+    val state = address?.adminArea
+    val country = address?.countryName
+    val street = address?.thoroughfare
+    val result = "$street, $kota, $state, $country."
+    Log.d("TAG", "getAddress: $addressLine \n $kota \n $state \n $country \n $street")
+    return result
+}
+
+private fun getLocation(rawAddress: String): List<String> {
+    val location = rawAddress.split('@').getOrNull(1)?.split(",")
+    val address = arrayListOf<String>()
+    location?.forEachIndexed { index, s ->
+        if (index < 2){
+            address.add(s)
+        }
+    }
+    return address
+}
+
 @Preview
 @Composable
 fun PreviewDetailScreen() {
-    DetailScreen(urlImage = "", rememberNavController(), hiltViewModel())
+    DetailScreen(-1, rememberNavController(), hiltViewModel())
 }

@@ -1,15 +1,22 @@
 package com.example.historyofselayar.screen
 
+import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -19,6 +26,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.historyofselayar.R
 import com.example.historyofselayar.component.TextSelayar
+import com.example.historyofselayar.data.model.Wisata
 import com.example.historyofselayar.main.Screen
 import com.example.historyofselayar.main.component.HistoryItem
 import com.example.historyofselayar.ui.theme.Typography
@@ -29,6 +37,8 @@ fun HomeScreen(
     navController: NavController,
     historyViewModel: HistoryViewModel
 ) {
+    val dataWisata by remember { historyViewModel.getAllWisata() }
+    Log.d("TAG", "HomeScreen: ${dataWisata.size}")
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -59,7 +69,7 @@ fun HomeScreen(
                         end.linkTo(icSearch.start, 4.dp)
                         width = Dimension.fillToConstraints
                     },
-                style = Typography.h6
+                style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold)
             )
             TextSelayar(
                 text = "Wisata Sejarah Kepulauan Selayar",
@@ -70,12 +80,15 @@ fun HomeScreen(
                         end.linkTo(icSearch.start, 4.dp)
                         width = Dimension.fillToConstraints
                     },
-                style = Typography.body2
+                style = Typography.body1
             )
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_search_24),
                 contentDescription = "Search",
                 modifier = Modifier
+                    .clickable {
+                        navController.navigate(Screen.SEARCHSCREEN.name)
+                    }
                     .constrainAs(icSearch) {
                         top.linkTo(tvTitle.top)
                         end.linkTo(parent.end)
@@ -96,13 +109,12 @@ fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                val data = "https://images.pexels.com/photos/15286/pexels-photo.jpg?cs=srgb&dl=pexels-luis-del-r%C3%ADo-15286.jpg&fm=jpg"
-                val listData = arrayListOf(data,data,data,data,data,data,data)
-                itemsIndexed(listData){ index, value ->
+                itemsIndexed(dataWisata){ index, value ->
                     HistoryItem(
                         value,
                         onItemClickListener = {
-                            navController.navigate(Screen.DETAILSCREEN.name)
+                            navController.navigate("${Screen.DETAILSCREEN.name}/${value.id}")
+                            Log.d("TAG", "HomeScreen: ${Screen.DETAILSCREEN.name}/${value.id}")
                         })
                 }
             }
