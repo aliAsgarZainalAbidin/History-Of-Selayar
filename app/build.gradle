@@ -9,7 +9,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.historyofselayar"
+        applicationId "com.selayar.history"
         minSdk 21
         targetSdk 32
         versionCode 1
@@ -77,6 +77,9 @@ dependencies {
     implementation "androidx.camera:camera-extensions:1.2.0"
 
     implementation "com.google.accompanist:accompanist-permissions:0.28.0"
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.28.0"
+    implementation "com.google.accompanist:accompanist-pager:0.28.0"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.28.0"
 
     //DI
     implementation 'com.google.dagger:hilt-android:2.44.2'
